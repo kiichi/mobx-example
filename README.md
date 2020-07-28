@@ -1,5 +1,5 @@
 # mobx-example
-MobX in-browser simple example with pure ES6 JavaScript without react, typescript, etc...
+[Introduction · MobX](https://mobx.js.org/README.html) in-browser simple example with pure ES6 JavaScript without react, typescript, etc...
 
 [Demo](https://kiichi.github.io/mobx-example/)
 
