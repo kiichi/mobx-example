@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>MobX Sample</title>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/3.3.7+1/css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <div class="container-fluid pt-4">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Add / Delete Items</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>
+                                        This is simple MobX Add / Delete items demo. Use only MobX and Raw ES6 JavaScript. Bootstrap is included for decoration purpose.
+                                    </p>
+                                    <div id="main"></div>
+                                    <form>
+                                        <div class="form-group row">
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control form-control-user" id="name" placeholder="Enter Name"/>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <a href="#" onclick="addItemClicked(event);" class="btn btn-primary btn-user btn-block"> <i class="fa fa-plus" aria-hidden="true"></i> Add </a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr/>
+                                    <code>
+                                        <pre id="code"></pre>
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/mobx/5.15.4/mobx.umd.min.js" integrity="sha256-UNmlC4kJptwCuBMr9TacFKVWt1u7VkOrJdpiu6SZseM=" crossorigin="anonymous"></script>
+    <script src="//code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script id="logic">
+        let data = {
+            items: [
+                { id: 1, name: "Justin" },
+                { id: 2, name: "Ryan" },
+                { id: 3, name: "Kiichi" },
+            ]
+        };
+
+        let state = mobx.observable(data);
+
+        // Main
+        mobx.autorun((reaction) => {
+            console.log('autorun');
+            renderList();
+        }, { delay: 10 });        
+
+        function renderList() {
+            let htmlStr = state.items.map((item) => getListItemHtml(item)).join('\n');
+            document.getElementById('main').innerHTML = htmlStr;
+        }
+
+        function getListItemHtml(item) {
+            return `<div><h5>${item.id}: ${item.name} <a href="#" onclick="deleteItem(${item.id})"><i class="fa fa-trash"></i></a></h5></div>`;
+        }
+
+        function addItemClicked(ev){
+            ev.preventDefault();
+            let input = document.getElementById('name');
+            let item = {
+               id:state.items[state.items.length-1].id + 1, 
+               name: input.value
+            };
+            addItem(item);
+            input.value = '';
+        }
+
+        function addItem(item) {
+            state.items.push(item);
+        }
+
+        function deleteItem(id) {
+            let idx = state.items.findIndex((item) => item.id === id);
+            state.items.splice(idx, 1);
+        }
+    </script>
+    <script>
+        document.getElementById('code').textContent = document.getElementById('logic').textContent.replace(/    /ig,'  ');
+    </script>
+</body>
+
+</html>
